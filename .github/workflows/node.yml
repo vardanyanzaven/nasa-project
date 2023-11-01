@@ -1,9 +1,9 @@
 name: NASA Project CI
 on:
   push:
-    branches: [main]
+    branches: [main, my-loadPlanetsData]
   pull_request:
-    branches: [main]
+    branches: [main, my-loadPlanetsData]
 jobs:
   build:
     env:
