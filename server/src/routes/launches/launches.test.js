@@ -6,7 +6,7 @@ const { loadPlanetsData } = require("../../models/planets.model");
 describe("Launches API tests", () => {
   beforeAll(async () => {
     await mongoConnect();
-    await loadPlanetsData();
+    jest.setTimeout(10000);
   });
 
   afterAll(async () => {
@@ -42,7 +42,7 @@ describe("Launches API tests", () => {
     };
 
     it("should respond with 201 created", async () => {
-      jest.setTimeout(10000);
+      await loadPlanetsData();
 
       const response = await request(app)
         .post("/v1/launches")
