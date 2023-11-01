@@ -52,11 +52,11 @@ const loadPlanetsData = async () => {
     .on("end", async () => {
       const countPlanetsFound = (await getAllPlanets()).length;
       console.log(`${countPlanetsFound} habitable planets found!`);
-      return;
+      return new Promise((resolve, reject) => resolve());
     })
     .on("error", (err) => {
       console.log(err);
-      return err;
+      return new Promise((resolve, reject) => reject(err));
     });
 };
 
