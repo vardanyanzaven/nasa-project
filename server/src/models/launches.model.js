@@ -104,9 +104,11 @@ const getAllLaunches = async (skip, limit) =>
     .limit(limit);
 
 const scheduleNewLaunch = async (launch) => {
+  console.log(`🛑TEST LAUNCH PLANET: ${typeof launch.target} ${launch.target}🛑`);
   const planet = await planets.findOne({
     keplerName: launch.target,
   });
+  console.log(`🛑${planet}🛑`);
 
   if (!planet) {
     throw new Error("No matching planet was found");

@@ -33,29 +33,32 @@ const savePlanet = async (planet)  => {
 
 // Streaming data and piping(sending) it to csv-parse
 
-const loadPlanetsData = () => {
-  return fs
-    .createReadStream(
+const loadPlanetsData = async () => {
+  return new Promise((resolve, reject) => {
+    fs.createReadStream(
       path.join(__dirname, "..", "..", "data", "kepler_data.csv")
     )
-    .pipe(
-      parse({
-        comment: "#",
-        columns: true,
+      .pipe(
+        parse({
+          comment: "#",
+          columns: true,
+        })
+      )
+      .on("data", async (data) => {
+        if (isHabitablePlanet(data)) {
+          savePlanet(data);
+        }
       })
-    )
-    .on("data", async (data) => {
-      if (isHabitablePlanet(data)) {
-        savePlanet(data);
-      }
-    })
-    .on("end", async () => {
-      const countPlanetsFound = (await getAllPlanets()).length;
-      console.log(`${countPlanetsFound} habitable planets found!`);
-    })
-    .on("error", (err) => {
-      console.log(err);
-    });
+      .on("error", (err) => {
+        console.log(err);
+        reject(err);
+      })
+      .on("end", async () => {
+        const countPlanetsFound = (await getAllPlanets()).length;
+        console.log(`${countPlanetsFound} habitable planets found!`);
+        resolve();
+      });
+  });
 };
 
 const getAllPlanets = async () => await planets.find({}, {

@@ -13,8 +13,8 @@ const server = http.createServer(app);
 
 (async () => {
     await mongoConnect();
-    loadPlanetsData();
-    loadLaunchData();
+    await loadPlanetsData();
+    await loadLaunchData();
 
     server.listen(PORT, () => {
         console.log(`Listening on port ${PORT}...`);

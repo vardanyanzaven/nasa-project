@@ -1,9 +1,17 @@
 const request = require("supertest");
 const app = require("../../app");
-const { mongoConnect } = require("../../services/mongo");
+const { mongoConnect, mongoDisconnect } = require("../../services/mongo");
+const { loadPlanetsData } = require("../../models/planets.model");
 
 describe("Launches API tests", () => {
-  beforeAll(async () => await mongoConnect());
+  beforeAll(async () => {
+    await mongoConnect();
+    await loadPlanetsData();
+  });
+
+  afterAll(async () => {
+    await mongoDisconnect();
+  });
 
   describe("GET /v1/launches tests", () => {
     it("should respond with 200 success", async () => {
@@ -18,14 +26,14 @@ describe("Launches API tests", () => {
     const launchData = {
       mission: "USS Enterprise",
       rocket: "NCC 1071-D",
-      target: "Kepler-442 b",
+      target: "Kepler-62 f",
       launchDate: "June 5, 2035",
     };
 
     const launchDataWithoutDate = {
       mission: "USS Enterprise",
       rocket: "NCC 1071-D",
-      target: "Kepler-442 b",
+      target: "Kepler-62 f",
     };
 
     const invalidDateLaunchData = {
@@ -34,6 +42,8 @@ describe("Launches API tests", () => {
     };
 
     it("should respond with 201 created", async () => {
+      jest.setTimeout(10000);
+
       const response = await request(app)
         .post("/v1/launches")
         .send(launchData)

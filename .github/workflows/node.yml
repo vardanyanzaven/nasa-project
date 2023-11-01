@@ -12,8 +12,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
-        mongodb-version: ["6.0"]
+        node-version: ["18.x", "20.x"]
+        mongodb-version: ['6.0']
 
     runs-on: ubuntu-latest
 
@@ -29,7 +29,13 @@ jobs:
         uses: supercharge/mongodb-github-action@1.10.0
         with: 
             mongodb-version: ${{ matrix.mongodb-version }}
-
+            
       - run: npm install
-      - run: npm run build --prefix client
+      - run: |
+            npm run build --prefix client
+            sleep 20
+        
+    # Use this action for troubleshooting
+    #   - name: Setup tmate session
+    #     uses: mxschmitt/action-tmate@v3
       - run: npm test
